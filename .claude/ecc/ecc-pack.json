@@ -1,0 +1,42 @@
+{
+  "source": {
+    "repo": "https://github.com/affaan-m/ECC",
+    "version": "2.2.3",
+    "commit": "4adeee6732a12d1540f49a4d50a38ce8c97f9a53",
+    "license": "MIT"
+  },
+  "transforms": {
+    "agentModel": "inherit"
+  },
+  "agents": [
+    "planner",
+    "architect",
+    "tdd-guide",
+    "code-reviewer",
+    "security-reviewer",
+    "build-error-resolver",
+    "e2e-runner",
+    "refactor-cleaner",
+    "loop-operator",
+    "silent-failure-hunter",
+    "pr-test-analyzer",
+    "react-reviewer"
+  ],
+  "skills": [
+    "tdd-workflow",
+    "verification-loop",
+    "ai-regression-testing",
+    "strategic-compact",
+    "context-budget",
+    "iterative-retrieval",
+    "loop-design-check",
+    "continuous-agent-loop",
+    "santa-method"
+  ],
+  "commands": [
+    "checkpoint",
+    "save-session",
+    "resume-session",
+    "loop-start"
+  ]
+}
