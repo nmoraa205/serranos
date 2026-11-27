@@ -35,6 +35,27 @@ Auditar el diff entre el commit fijado y el nuevo (`git diff <viejo> <nuevo> -- 
 
 ## Lo que se dejó fuera a propósito
 
-- **Runtime de hooks de ECC** (316 archivos; sus comandos llevan rutas absolutas de la máquina, así que no es portable dentro de un repo). Si se quiere, se instala por máquina con el instalador oficial: `./install.sh --target claude --modules hooks-runtime --enable-hooks`, con `ECC_HOOK_PROFILE=minimal`. Afecta a todas las sesiones de esa máquina.
+- **Runtime de hooks de ECC** (316 archivos; sus comandos llevan rutas absolutas de la máquina, así que no es portable dentro de un repo). Ver "Hooks opcionales por máquina".
+- **Destino `codex` del instalador oficial**: escribe `~/.codex/config.toml` con búsqueda web activa y seis servidores MCP lanzados con `npx -y` (dos sin versión fija). Codex usa `AGENTS.md` en su lugar.
 - Skills `security-review` y comandos `/plan` y `/code-review` de ECC: duplican funciones nativas de Claude Code.
 - Servidores MCP, `auto-update`, la GitHub App de ECC Tools y el puente de cómputo Itô: código remoto o servicios de pago.
+
+## Hooks opcionales por máquina
+
+No se instalan con este paquete. Afectan a **todas** las sesiones de Claude Code de la máquina, así que no deben activarse mientras haya agentes trabajando en ella.
+
+```bash
+# desde el checkout de ECC en el commit fijado
+./install.sh --target claude --modules hooks-runtime --enable-hooks --dry-run   # revisar; luego sin --dry-run
+
+# entorno recomendado (perfil más conservador)
+export ECC_HOOK_PROFILE=minimal
+export ECC_SKIP_LLM_SUMMARY=1   # no envía extractos de la conversación a `claude -p` (evita consumo extra)
+export ECC_SKIP_OBSERVE=1       # no guarda entradas/salidas de herramientas en el home
+export ECC_GATEGUARD=off        # evita bloqueos que detienen ejecuciones desatendidas
+# interruptor general: ECC_HOOKS_ENABLED=false
+```
+
+Con `minimal` quedan activos: bloqueo de `--no-verify`, inicio/fin de sesión (resumen para recuperar sesiones), registro de costos y métricas. El perfil `standard` añade hooks que reescriben comandos, formatean código al terminar, lanzan `npx` y arrancan servidores MCP duplicados; no usarlo sin desactivar esos hooks con `ECC_DISABLED_HOOKS`.
+
+El instalador pone `includeCoAuthoredBy: false` en `~/.claude/settings.json` y crea `~/.claude/ecc/state.db`; `uninstall` no revierte ninguna de las dos cosas. No ejecutar `/auto-update`: descarga y reinstala código sin auditar.
